@@ -35,15 +35,15 @@ function Login() {
 
   const { mutate } = useMutation(login, {
     onSuccess: (res) => {
+      console.log("res",res)
       notifySuccess("Logged In Successfully")
       // setUser(res?.data?.data)
       setLoading("success");
       navigate.push("/signup");
-      let token = res.data.data.token;
+      let token = res.data.accessToken;
       let userDetail = JSON.stringify({
-        role: res.data.data.role,
-        name: res.data.data.firstName + " " + res.data.data.lastName,
-        id: res.data.data._id,
+      
+        id: res.data.user.id,
       });
       localStorage.setItem("user", userDetail);
       localStorage.setItem("token", token);
