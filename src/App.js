@@ -6,6 +6,7 @@ import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 import { useMaterialUIController } from "context";
 import SignUp from "pages/SignUp";
+import Navbar from "components/Navbar";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -14,6 +15,7 @@ function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <div className="App">
+        <Navbar/>
       <Router>
       <div>
         <Route exact path="/login" component={Login} />

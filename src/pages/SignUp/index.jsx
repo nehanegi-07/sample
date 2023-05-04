@@ -43,11 +43,9 @@ function SignUp() {
       notifySuccess("SignUp Successfully")
       setLoading("success");
       navigate.push("/login");
-      let token = res.data.data.token;
-      let userDetail = JSON.stringify({
-        role: res.data.data.role,
-        name: res.data.data.firstName + " " + res.data.data.lastName,
-        id: res.data.data._id,
+      let token = res.data.accessToken;
+       let userDetail = JSON.stringify({
+        id: res.data.user.id,
       });
       localStorage.setItem("user", userDetail);
       localStorage.setItem("token", token);

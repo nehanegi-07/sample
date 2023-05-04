@@ -42,7 +42,6 @@ function Login() {
       navigate.push("/signup");
       let token = res.data.accessToken;
       let userDetail = JSON.stringify({
-      
         id: res.data.user.id,
       });
       localStorage.setItem("user", userDetail);
