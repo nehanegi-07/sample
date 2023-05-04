@@ -16,7 +16,7 @@ import { register } from "services/Authentication.Services";
 function SignUp() {
 
   const navigate = useHistory()
-  const { loading, setLoading } = useState('idle')
+  const [ loading, setLoading ]= useState('idle')
   const initState = {
     firstName: "",
     lastName: "",
@@ -31,8 +31,7 @@ function SignUp() {
     initialValues: initState,
      validationSchema: signUpvalidationSchema,
     onSubmit: (values) => {
-      // console.log(values, "sign");
-      // setLoading("pending")
+       setLoading("pending")
       mutate(values);
     },
   });
@@ -219,6 +218,7 @@ function SignUp() {
                     color="info"
                     size="large"
                     fullWidth
+                    isLoading={loading}
                   >
                     sign up
                   </MDButton>

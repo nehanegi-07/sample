@@ -1,29 +1,11 @@
-/* eslint-disable prefer-destructuring */
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
 export default styled(Button)(({ theme, ownerState }) => {
   const { palette, functions, borders, boxShadows } = theme;
   const { color, variant, size, circular, iconOnly, darkMode } = ownerState;
-
   const { white, text, transparent, gradients, grey } = palette;
-  const { boxShadow, linearGradient, pxToRem, rgba } = functions;
+  const { boxShadow, pxToRem, rgba } = functions;
   const { borderRadius } = borders;
   const { colored } = boxShadows;
 
@@ -45,7 +27,6 @@ export default styled(Button)(({ theme, ownerState }) => {
         )}, ${boxShadow([0, 1], [5, 0], palette[color].main, 0.15)}`
       : "none";
 
-    // boxShadow value when button is hovered
     const hoveredBoxShadowValue = colored[color]
       ? `${boxShadow([0, 14], [26, -12], palette[color].main, 0.4)}, ${boxShadow(
           [0, 4],
@@ -151,7 +132,7 @@ export default styled(Button)(({ theme, ownerState }) => {
     const backgroundValue =
       color === "white" || !gradients[color]
         ? white.main
-        : linearGradient(gradients[color].main, gradients[color].state);
+        :color.main;
 
     // boxShadow value
     const boxShadowValue = colored[color]
@@ -272,5 +253,6 @@ export default styled(Button)(({ theme, ownerState }) => {
     ...(variant === "text" && textStyles()),
     ...(circular && circularStyles()),
     ...(iconOnly && iconOnlyStyles()),
+
   };
 });

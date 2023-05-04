@@ -157,6 +157,7 @@ function Login() {
                     color="info"
                     size="large"
                     fullWidth
+                    isLoading={loading}
                   >
                     sign in
                   </MDButton>
