@@ -6,6 +6,7 @@ import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 import { useMaterialUIController } from "context";
 import SignUp from "pages/SignUp";
+import Dashboard from "pages/Dashboard"
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -16,6 +17,7 @@ function App() {
       <div className="App">
       <Router>
       <div>
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
       </div>

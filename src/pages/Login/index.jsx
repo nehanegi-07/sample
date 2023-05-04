@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 import { Switch, Grid } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -16,6 +16,9 @@ import { notifyError, notifySuccess } from "components/Messages";
 function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState("idle");
+  const [redirectOnLogin, setRedirectOnLogin] = useState(
+    false
+  );
   const navigate = useHistory();
 
   const initState = {
@@ -38,8 +41,7 @@ function Login() {
       console.log("res",res)
       notifySuccess("Logged In Successfully")
       // setUser(res?.data?.data)
-      setLoading("success");
-      navigate.push("/signup");
+      
       let token = res.data.accessToken;
       let userDetail = JSON.stringify({
       
@@ -47,6 +49,10 @@ function Login() {
       });
       localStorage.setItem("user", userDetail);
       localStorage.setItem("token", token);
+      setTimeout(() => {
+        setRedirectOnLogin(true)
+        setLoading("success");
+      }, 700)
     },
     onError: (error) => {
       setLoading("error");
@@ -62,7 +68,9 @@ function Login() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   return (
-    <MDBox
+    <>
+    {redirectOnLogin && <Redirect to="/" />}
+     <MDBox
       width="100vw"
       height="100%"
       minHeight="100vh"
@@ -183,6 +191,8 @@ function Login() {
         </Grid>
       </Grid>
     </MDBox>
+    </>
+   
   );
 }
 
