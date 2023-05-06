@@ -20,8 +20,6 @@ import { worldMerc } from "@react-jvectormap/world";
 // @mui material components
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
-
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -36,7 +34,7 @@ function SalesByCountry() {
   return (
     <Card sx={{ width: "100%" }}>
       <MDBox display="flex">
-        <MDBox
+        {/* <MDBox
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -50,12 +48,10 @@ function SalesByCountry() {
           ml={3}
           mt={-2}
         >
-          <Icon fontSize="medium" color="inherit">
-            language
-          </Icon>
-        </MDBox>
+          <CurrencyBitcoinIcon />
+        </MDBox> */}
         <MDTypography variant="h6" sx={{ mt: 2, mb: 1, ml: 2 }}>
-          Sales by Country
+          Crypto Currency Chart
         </MDTypography>
       </MDBox>
       <MDBox p={2}>

@@ -33,6 +33,7 @@ import MDTypography from "components/MDTypography";
 
 // Anaytics dashboard components
 import SalesByCountry from "./components/SalesByCountry/";
+import Navbar from 'components/Navbar';
 
 // Data
 // import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
@@ -70,6 +71,7 @@ function Dashboard() {
   return (
     <React.Fragment>
       {/* <DashboardNavbar /> */}
+      <Navbar />
       <MDBox py={3}>
         <Grid container>
           <SalesByCountry />
