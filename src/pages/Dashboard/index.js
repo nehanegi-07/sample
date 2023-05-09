@@ -1,225 +1,230 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 import React from 'react';
-// @mui material components
 import Grid from "@mui/material/Grid";
-import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-
-// Material Dashboard 2 PRO React examples
-// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-// import Footer from "examples/Footer";
-// import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-// import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-// import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-// import BookingCard from "examples/Cards/BookingCard";
-
-// Anaytics dashboard components
+import LogoImage from "assets/images/marie.jpg"
 import SalesByCountry from "./components/SalesByCountry/";
 import Navbar from 'components/Navbar';
-
-// Data
-// import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
-// import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
-
-// Images
-// import booking1 from "assets/images/products/product-1-min.jpg";
-// import booking2 from "assets/images/products/product-2-min.jpg";
-// import booking3 from "assets/images/products/product-3-min.jpg";
-
+import Avatar from '@mui/material/Avatar';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import GridViewIcon from '@mui/icons-material/GridView';
+import { Autocomplete} from '@mui/material';
+import MDCard from 'components/MDCard';
+import MDInput from 'components/MDInput';
+import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
+import MDButton from 'components/MDButton';
+import AddIcon from '@mui/icons-material/Add';
+import MDBadge from 'components/MDBadge';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import TagIcon from '@mui/icons-material/Tag';
+import Card from "@mui/material/Card";
+import DataTable from 'components/DataTable';
+import dataTableData from './data/dataTableData';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 function Dashboard() {
-//   const { sales, tasks } = reportsLineChartData;
 
-  // Action buttons for the BookingCard
-  const actionButtons = (
-    <>
-      <Tooltip title="Refresh" placement="bottom">
-        <MDTypography
-          variant="body1"
-          color="primary"
-          lineHeight={1}
-          sx={{ cursor: "pointer", mx: 3 }}
-        >
-          <Icon color="inherit">refresh</Icon>
-        </MDTypography>
-      </Tooltip>
-      <Tooltip title="Edit" placement="bottom">
-        <MDTypography variant="body1" color="info" lineHeight={1} sx={{ cursor: "pointer", mx: 3 }}>
-          <Icon color="inherit">edit</Icon>
-        </MDTypography>
-      </Tooltip>
-    </>
-  );
+  const cardData = [{
+    title: "Overview",
+    firstBlockHeader: "ETH BALANCE",
+    firstBlockData: <MDBox display="flex" alignItems="center"><GridViewIcon />
+      <MDTypography
+        variant="button"
+        color={"text"}
+        ml={0.7}
+      >
+        0.00
+      </MDTypography>
+    </MDBox >,
+    secondBlockHeader: "ETH VALUE",
+    secondBlockData: "$0.00",
+    thirdBlockHeader: "TOKEN HOLIDINGS",
+    thirdBlockData: <MDBox sx={{ display: "flex", width: "100%", alignItems: "center", gap: 1, mt: 1 }}>
+      <MDBox sx={{ width: "90%" }}>
+        <Autocomplete
+          disableClearable
+          options={["$280,910.96 (42 Token)", 1131313, 313131, 1313131]}
+          size="small"
+          sx={{ width: " 100%" }}
+          fullWidth
+          renderInput={(params) => (
+            <MDInput {...params} fullWidth />
+          )}
+        />
+      </MDBox>
+      <MDBox sx={{ backgroundColor: "#e2e2e2", width: "40px", height: "33px", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <BrandingWatermarkIcon />
+      </MDBox>
+    </MDBox>
+  }, {
+    title: "Overview",
+    firstBlockHeader: "PRIVATE NAME TAGS",
+    firstBlockData: <MDButton sx={{ border: "1px dashed black", borderRadius: "40px", height: "15px" }}>
+      <AddIcon /> Add
+    </MDButton>,
+    secondBlockHeader: "CONTRACT CREATORS",
+    secondBlockData: <span style={{ color: "#0d7ee2" }}>Apecoin Deployer at txn 0*2732774g</span>,
+    thirdBlockHeader: "TOKEN TRACKER",
+    thirdBlockData: <MDBox display="flex">
+      <Avatar
+        alt="Shiv"
+        src={LogoImage}
+        sx={{ width: 24, height: 24, mr: 0.5 }}
+      />
+      <span style={{ color: "#0d7ee2", marginTop: "3px" }}>ApeCoin (APE) </span>
+      <span style={{ color: "grey", marginTop: "3px" }}>(@$4.13) </span>
+    </MDBox>
+  }, {
+    title: "Overview",
+    firstBlockHeader: "PRIVATE NAME TAGS",
+    firstBlockData: <MDButton sx={{ border: "1px dashed black", borderRadius: "40px", height: "15px" }}>
+      <AddIcon /> Add
+    </MDButton>,
+    secondBlockHeader: "CONTRACT CREATORS",
+    secondBlockData: <span style={{ color: "#0d7ee2" }}>Apecoin Deployer at txn 0*2732774g</span>,
+    thirdBlockHeader: "TOKEN TRACKER",
+    thirdBlockData: <MDBox display="flex">
+      <Avatar
+        alt="Shiv"
+        src={LogoImage}
+        sx={{ width: 24, height: 24, mr: 0.5 }}
+      />
+      <span style={{ color: "#0d7ee2", marginTop: "3px" }}>ApeCoin (APE) </span>
+      <span style={{ color: "grey", marginTop: "3px" }}>(@$4.13) </span>
+    </MDBox>
+  }
+  ]
 
   return (
     <React.Fragment>
-      {/* <DashboardNavbar /> */}
       <Navbar />
-      <MDBox py={3}>
-        <Grid container>
-          <SalesByCountry />
+      <Grid sx={{ backgroundColor: "#eaeaea" }}>
+        <MDTypography
+          variant="body1"
+          lineHeight={1}
+          sx={{ cursor: "pointer", py: 2, pl: 2 }}
+        >
+          UserId
+        </MDTypography>
+      </Grid>
+
+      <Grid sx={{ borderBottom: "1px solid #e9e9f5", pb: 1.5 }}>
+        <MDBox sx={{ display: "flex", mt: 1, pl: 2 }}>
+          <MDBox display="flex">
+            <Avatar
+              alt="Shiv"
+              src={LogoImage}
+              sx={{ width: 24, height: 24 }}
+            />
+            <MDTypography variant="h5" sx={{ ml: 1, mr: 1 }}>
+              Contract
+            </MDTypography>
+          </MDBox>
+          <span style={{ marginTop: "6px", marginRight: "11px" }}>0000000xxxxxxxxxTYBGECCCEWSCVBNJIIYRWSCVB</span>
+          <ContentCopyIcon sx={{ mt: 1 }} />
+          <GridViewIcon sx={{ mt: 1, ml: 1 }} />
+        </MDBox>
+      </Grid>
+
+      <Grid sx={{ pb: 1.5 }}>
+        <MDBox sx={{ display: "flex", mt: 1, pl: 2 }}>
+          <MDBox display="flex">
+            <span style={{ marginTop: "10px", marginRight: "1px" }}>SALES! Get 15% off(one-time) for any new API Pro Subscription.</span>
+            <MDTypography variant="h6" sx={{ ml: 0.5, mr: 1, mt: 0.8, color: "#0d7ee2" }}>
+              Code:ESFP15Q223
+            </MDTypography>
+          </MDBox>
+        </MDBox>
+      </Grid>
+
+      <Grid sx={{ pb: 1.5, }}>
+        <MDBox sx={{ pl: 2 }}>
+          <MDButton color="light" sx={{ borderRadius: 10, border: "1px solid #abadb1", mt: 1, mr: 1 }}>
+            <LocalOfferIcon sx={{ mr: 1 }} /> Apecoin: APE Token <ContentCopyIcon sx={{ ml: 1 }} />
+          </MDButton>
+          <MDButton color="success" sx={{ borderRadius: 10, border: "1px solid #abadb1", width: "150px", mt: 1, mr: 1 }}>
+         Source Code
+          </MDButton>
+          <MDButton color="light" sx={{ borderRadius: 10, border: "1px solid #abadb1", width: "200px", mt: 1, mr: 1 }}>
+            <TagIcon sx={{ mr: 1 }} /> Token Contracts
+          </MDButton>
+        </MDBox>
+      </Grid>
+
+
+      {/* <Grid sx={{ borderBottom: "1px solid #e9e9f5", pb: 1.5 }}>
+      <MDBox>
+      </MDBox>
+      <MDBox>
+      </MDBox>
+      </Grid> */}
+
+      {/* Card Part here */}
+
+      <MDBox mb={3}>
+        <Grid container spacing={3}>
+          {cardData?.map((item, index) => {
+            return (
+              <Grid item xs={12} lg={4} key={index}>
+                <MDCard
+                  title={item?.title}
+                  firstBlockHeader={item?.firstBlockHeader}
+                  firstBlockData={item?.firstBlockData}
+                  secondBlockHeader={item?.secondBlockHeader}
+                  secondBlockData={item?.secondBlockData}
+                  thirdBlockHeader={item?.thirdBlockHeader}
+                  thirdBlockData={item?.thirdBlockData}
+
+                />
+              </Grid>
+            )
+          })}
+
+
         </Grid>
-        <MDBox mt={6}>
-          {/* <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid> */}
+      </MDBox>
+
+
+      <Grid sx={{ borderBottom: "1px solid #e9e9f5", pb: 1.5, }}>
+        <MDBox sx={{ pl: 2 }}>
+          <MDBadge badgeContent="Transactions" size="md" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Internal Transactions" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Token Transfer (ERC:20)" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="NFT Transfer" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Contract" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Events" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Analaytics" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Info" color="light" container sx={{ mr: 1, mt: 1 }} />
+          <MDBadge badgeContent="Comments" color="light" container sx={{ mr: 1, mt: 1 }} />
+
         </MDBox>
-        <MDBox mt={1.5}>
-          {/* <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="dark"
-                  icon="weekend"
-                  title="Bookings"
-                  count={281}
-                  percentage={{
-                    color: "success",
-                    amount: "+55%",
-                    label: "than lask week",
-                  }}
-                />
+      </Grid>
+
+      <MDBox mb={3}>
+          <Card>
+            <MDBox p={3} lineHeight={1}>
+              <MDTypography variant="button" color="text">
+              <ArrowDownwardIcon/> Latest 25 drom a total of<span style={{color:"#0d7ee2"}}>1,,013,060</span> transcations
+              </MDTypography>
+              <MDBox>
+              <MDTypography variant="button" color="text">
+               (More than <span style={{color:"#0d7ee2"}}>25 Pending Txns</span>)
+              </MDTypography>
               </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  icon="leaderboard"
-                  title="Today's Users"
-                  count="2,300"
-                  percentage={{
-                    color: "success",
-                    amount: "+3%",
-                    label: "than last month",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="success"
-                  icon="store"
-                  title="Revenue"
-                  count="34k"
-                  percentage={{
-                    color: "success",
-                    amount: "+1%",
-                    label: "than yesterday",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="primary"
-                  icon="person_add"
-                  title="Followers"
-                  count="+91"
-                  percentage={{
-                    color: "success",
-                    amount: "",
-                    label: "Just updated",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-          </Grid> */}
+            </MDBox>
+            <DataTable table={dataTableData} />
+          </Card>
         </MDBox>
-        <MDBox mt={2}>
-          {/* <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking1}
-                  title="Cozy 5 Stars Apartment"
-                  description='The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Barcelona.'
-                  price="$899/night"
-                  location="Barcelona, Spain"
-                  action={actionButtons}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking2}
-                  title="Office Studio"
-                  description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the night life in London, UK.'
-                  price="$1.119/night"
-                  location="London, UK"
-                  action={actionButtons}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking3}
-                  title="Beautiful Castle"
-                  description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Milan.'
-                  price="$459/night"
-                  location="Milan, Italy"
-                  action={actionButtons}
-                />
-              </MDBox>
-            </Grid>
-          </Grid> */}
-        </MDBox>
+
+
+      {/* <Grid container>
+        <SalesByCountry />
+      </Grid> */}
+
+      <MDBox mt={1.5}>
+
+
+
       </MDBox>
       {/* <Footer /> */}
     </React.Fragment>

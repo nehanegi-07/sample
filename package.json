@@ -23,6 +23,7 @@
     "@react-jvectormap/core": "1.0.1",
     "@react-jvectormap/world": "1.0.0",
     "axios": "^1.2.1",
+    "card-validator": "^8.1.1",
     "chart.js": "3.4.1",
     "chroma-js": "2.4.2",
     "date-fns": "2.15.0",

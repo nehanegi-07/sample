@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link, useHistory, Redirect } from "react-router-dom";
 import { Switch, Grid } from "@mui/material";
 import MDBox from "components/MDBox";
@@ -15,14 +15,16 @@ import { notifyError, notifySuccess } from "components/Messages";
 
 function Login() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [userId,setUserId]=useState("")
   const [loading, setLoading] = useState("idle");
   const [redirectOnLogin, setRedirectOnLogin] = useState(
     false
   );
+  console.log(userId,"userId====>")
   const navigate = useHistory();
 
   const initState = {
-    email: "",
+    email: userId||"",
     password: "",
   };
 
@@ -35,6 +37,25 @@ function Login() {
       mutate(values);
     },
   });
+
+  useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      setTimeout(() => {  
+        setUserId(window.ethereum.selectedAddress);
+      }, 700)
+      setUserId(window.ethereum.selectedAddress)
+    }
+  }, []);
+
+  
+
+  // useEffect(() => {
+  //   if (typeof window.metaphor !== 'undefined') {
+  //     console.log("right")
+  //     const userId = window.metaphor.getUserID();
+  //     setUserId(userId);
+  //   }
+  // }, []);
 
   const { mutate } = useMutation(login, {
     onSuccess: (res) => {
@@ -98,6 +119,7 @@ function Login() {
           >
             <MDBox py={3} px={3} textAlign="center">
               <>
+              {userId}
                 <MDBox mb={1} textAlign="center">
                   <MDTypography variant="h4" fontWeight="bold">
                     Sign In

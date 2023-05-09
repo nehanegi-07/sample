@@ -58,7 +58,7 @@ MDBadge.propTypes = {
     "light",
     "dark",
   ]),
-  variant: PropTypes.oneOf(["gradient", "contained"]),
+
   size: PropTypes.oneOf(["xs", "sm", "md", "lg"]),
   circular: PropTypes.bool,
   indicator: PropTypes.bool,

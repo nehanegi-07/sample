@@ -3,20 +3,25 @@ import {AppBar,Box,Toolbar,IconButton,Typography,Menu,Container,Button,Tooltip,M
 import MenuIcon from '@mui/icons-material/Menu';
 import Avatar from '@mui/material/Avatar';
 import MDBox from 'components/MDBox';
+import {useHistory} from "react-router-dom";
 
-const pages = ['Home','About Us', 'Products', 'Pricing','Jobs','Blog', 'Log out'];
+const pages = ['Home','About Us', 'Products', 'Pricing','Jobs','Buy','Log out'];
 
 
 function Navbar() {
+  const navigate = useHistory();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
 
+  
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleNavigation = (e,page) => {
+   if(page==='Buy'){
+    navigate.push("/addcreditcard");
+   }
   };
 
 
@@ -73,13 +78,13 @@ function Navbar() {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={""}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={(e)=>handleNavigation(e,page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -113,7 +118,7 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={(e)=>handleNavigation(e,page)}
                 color='white'
                 sx={{ my: 2, color:'white', display: 'block',fontSize:"15px",fontWeight:400 }}
               >
