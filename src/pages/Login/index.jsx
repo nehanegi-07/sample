@@ -11,6 +11,7 @@ import { signInvalidationSchema } from "validator";
 import { useMutation } from "react-query";
 import { login } from "services/Authentication.Services";
 import { notifyError, notifySuccess } from "components/Messages";
+import { useAuth } from "context/AuthContext";
 
 
 function Login() {
@@ -20,7 +21,7 @@ function Login() {
   const [redirectOnLogin, setRedirectOnLogin] = useState(
     false
   );
-  console.log(userId,"userId====>")
+  const { setAuthState} = useAuth();
   const navigate = useHistory();
 
   const initState = {
@@ -30,22 +31,22 @@ function Login() {
 
   const formik = useFormik({
     initialValues: initState,
-    validationSchema: signInvalidationSchema,
+    // validationSchema: signInvalidationSchema,
     onSubmit: (values) => {
-      console.log(values, "login");
       setLoading("pending")
-      mutate(values);
+      let payload = {username: values.email, password: values.password}
+      mutate(payload);
     },
   });
 
-  useEffect(() => {
-    if (typeof window.ethereum !== 'undefined') {
-      setTimeout(() => {  
-        setUserId(window.ethereum.selectedAddress);
-      }, 700)
-      setUserId(window.ethereum.selectedAddress)
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window.ethereum !== 'undefined') {
+  //     setTimeout(() => {  
+  //       setUserId(window.ethereum.selectedAddress);
+  //     }, 700)
+  //     setUserId(window.ethereum.selectedAddress)
+  //   }
+  // }, []);
 
   
 
@@ -59,17 +60,10 @@ function Login() {
 
   const { mutate } = useMutation(login, {
     onSuccess: (res) => {
-      console.log("res",res)
       notifySuccess("Logged In Successfully")
-      // setUser(res?.data?.data)
-      
-      let token = res.data.accessToken;
-      let userDetail = JSON.stringify({
-      
-        id: res.data.user.id,
-      });
-      localStorage.setItem("user", userDetail);
-      localStorage.setItem("token", token);
+      let token = res.data.access_token;
+      let userInfo = res.data.user
+     setAuthState({token , userInfo})
       setTimeout(() => {
         setRedirectOnLogin(true)
         setLoading("success");
@@ -138,7 +132,6 @@ function Login() {
               >
                 <MDBox mb={2}>
                   <MDInput
-                    type="email"
                     label="Email"
                     variant="standard"
                     value={formik.values.email}
