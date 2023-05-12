@@ -19,3 +19,8 @@ export const register = async (userData) => {
     return RegisterUserState;
 };
 
+
+export const contract = async (payload) => {
+    const contractData = await publicFetch.post('sca/contract/', payload);
+    return contractData;
+}

@@ -3,7 +3,7 @@ import { CircularProgress } from '@mui/material';
 
 function Loader({size,color}) {
     return (
-        <div>
+        <div style={{display: 'flex', justifyContent:'center'}}>
             <CircularProgress size={size} color={color}/>
         </div>
     )

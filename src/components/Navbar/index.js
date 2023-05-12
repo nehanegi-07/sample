@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Avatar from '@mui/material/Avatar';
 import MDBox from 'components/MDBox';
 import {useHistory} from "react-router-dom";
+import { useAuth } from 'context/AuthContext';
 
 const pages = ['Home','About Us', 'Products', 'Pricing','Jobs','Buy','Log out'];
 
@@ -11,6 +12,7 @@ const pages = ['Home','About Us', 'Products', 'Pricing','Jobs','Buy','Log out'];
 function Navbar() {
   const navigate = useHistory();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const {logout} = useAuth()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -18,10 +20,11 @@ function Navbar() {
 
   
 
-  const handleNavigation = (e,page) => {
+  const handleNavigation = async (e,page) => {
    if(page==='Buy'){
     navigate.push("/addcreditcard");
    }
+   
   };
 
 
@@ -125,6 +128,8 @@ function Navbar() {
                 {page}
               </Button>
             ))}
+
+            
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
