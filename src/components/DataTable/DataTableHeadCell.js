@@ -43,12 +43,12 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
         {...rest}
         position="relative"
         textAlign={align}
-        color={darkMode ? "white" : "secondary"}
+        color="black"
         opacity={0.7}
         sx={({ typography: { size, fontWeightBold } }) => ({
-          fontSize: size.xxs,
+          fontSize: ".78515625rem",
           fontWeight: fontWeightBold,
-          textTransform: "uppercase",
+          // textTransform: "uppercase",
           cursor: sorted && "pointer",
           userSelect: sorted && "none",
         })}
@@ -70,7 +70,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
               color={sorted === "asce" ? "text" : "secondary"}
               opacity={sorted === "asce" ? 1 : 0.5}
             >
-              <Icon>arrow_drop_up</Icon>
+              {/* <Icon>arrow_drop_up</Icon> */}
             </MDBox>
             <MDBox
               position="absolute"
@@ -78,7 +78,7 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
               color={sorted === "desc" ? "text" : "secondary"}
               opacity={sorted === "desc" ? 1 : 0.5}
             >
-              <Icon>arrow_drop_down</Icon>
+              {/* <Icon>arrow_drop_down</Icon> */}
             </MDBox>
           </MDBox>
         )}

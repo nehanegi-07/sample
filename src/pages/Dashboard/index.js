@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import LogoImage from "assets/images/marie.jpg";
-import SalesByCountry from "./components/SalesByCountry/";
+import LogoImage from "assets/images/avatar.png";
 import Navbar from "components/Navbar";
 import Avatar from "@mui/material/Avatar";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -12,15 +11,15 @@ import { Autocomplete } from "@mui/material";
 import MDCard from "components/MDCard";
 import MDInput from "components/MDInput";
 import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MDButton from "components/MDButton";
 import AddIcon from "@mui/icons-material/Add";
 import MDBadge from "components/MDBadge";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import TagIcon from "@mui/icons-material/Tag";
 import Card from "@mui/material/Card";
 import DataTable from "components/DataTable";
-import dataTableData from "./data/dataTableData";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { InputAdornment } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -28,7 +27,28 @@ import { contract } from "services/Authentication.Services";
 import Loader from "components/Loader";
 import { notifySuccess } from "components/Messages";
 import { notifyError } from "components/Messages";
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
+
+function getTimeDifference(timestamp) {
+  let currentTimestamp = Math.floor(Date.now() / 1000); // Get current timestamp in seconds
+  let timeDifference = currentTimestamp - timestamp; // Calculate time difference in seconds
+
+  let days = Math.floor(timeDifference / (3600 * 24)); // Calculate days
+  let hours = Math.floor((timeDifference % (3600 * 24)) / 3600); // Calculate remaining hours
+  let minutes = Math.floor((timeDifference % 3600) / 60); // Calculate remaining minutes
+  let seconds = timeDifference % 60; // Calculate remaining seconds
+
+  if (days > 0) {
+    return days + " days ago";
+  } else if (hours > 0) {
+    return hours + " hrs " + minutes + " mins ago";
+  } else if (minutes > 0) {
+    return minutes + " mins ago";
+  } else {
+    return seconds + " secs ago";
+  }
+}
 
 const cardData = [
   {
@@ -154,75 +174,590 @@ const cardData = [
 ];
 function Dashboard() {
   const [address, setAddress] = useState("");
-  const [jsonItems, setJsonItems] = useState({});
+  // const [, setContractIDData] = useState([])
+  const [data, setData] = useState({})
+  const [selectedTable, setSelectedTable] = useState("transaction")
   const [loading, setLoading] = useState(false);
-  // handleSubmit = async (e) => {
-  //   try {
-  //     const response = await axios.post(AuthUrls.CONTRACT, {
-  //       method: "POST",
-  //       hex_address,
-  //       csrfmiddlewaretoken,
-  //     });
-
-
 
   const fetchContract = async () => {
     try {
-      setLoading(true)
-      const response = await contract({hex_address:address});
+      setLoading(true);
+      const response = await contract({ hex_address: address });
       const jsonBCData = response.data;
-      setLoading(false)
-      setJsonItems(jsonBCData);
-      notifySuccess('Data Loaded Successfully')
+      setData({
+        transaction: jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_txn.json"],
+        "internal-transaction": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_int_txn.json"],
+        "erc20": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_erc20_add.json"],
+        "erc20Contract": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_erc20_contract.json"],
+        "events": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_log.json"],
+        "nft-transfer": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_erc721_add.json"]
+      });
 
-    } catch(err){
-      setLoading(false)
-      notifyError('Something went wrong')
-      console.log(err)
+      setLoading(false);
+      // setContractIDData(jsonBCData)
+      notifySuccess("Data Loaded Successfully");
+    } catch (err) {
+      setLoading(false);
+      notifyError("Something went wrong");
+      console.log(err);
+    }
+  };
+  const transactionColumns = [
+    {
+      Header: <HelpOutlineIcon fontSize="small" />,
+      accessor: "gas",
+      Cell: (props) => {
+
+        return (
+          <MDBadge badgeContent={<VisibilityIcon />} color="light" container />
+        );
+      },
+    },
+    {
+      Header: "Transaction Hash",
+      accessor: "blockHash",
+      Cell: (props) => {
+
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockHash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: (
+        <MDBox
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span>Method</span>
+          <MDBox>
+            <HelpOutlineIcon fontSize="small" />
+          </MDBox>
+        </MDBox>
+      ),
+      accessor: "blockNumber",
+      Cell: (props) => {
+        return (
+          <MDBadge
+            badgeContent="Transfer"
+            color="light"
+            container
+            sx={{ mr: 1, mt: 1, fontSize: "5px" }}
+          />
+        );
+      },
+    },
+    {
+      Header: "Block",
+      accessor: "cumulativeGasUsed",
+      Cell: (props) => {
+        return  props.row.original.blockNumber
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "From",
+      accessor: "from",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+              {props.row.original.from ?? "-"}
+            </span>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <MDBadge badgeContent="IN" color="success" container />
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "To",
+      accessor: "to",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDTypography sx={{ fontSize: "14px" }}>
+              Center:USD Coin
+            </MDTypography>
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "Value",
+      accessor: "value",
+      Cell: (props) => {
+        return `${props.row.original.value} ETH`;
+      },
+    },
+    {
+      Header: (
+        <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Txn Fee</span>
+      ),
+      accessor: "transactionIndex",
+      Cell: (props) => {
+        return props.row.original.gasPrice;
+      },
+    },
+  ];
+
+  const internalTransactions = [
+    {
+      Header: "Parent Txn Hash",
+      accessor: "hash",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.hash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Block",
+      accessor: "blockNumber",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "From",
+      accessor: "from",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDBox>
+              <TextSnippetIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+              {props.row.original.from ?? "-"}
+            </span>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "To",
+      accessor: "gas",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDBox>
+              <TextSnippetIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <MDTypography sx={{ fontSize: "14px" }}>
+              Center:USD Coin
+            </MDTypography>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "Value",
+      accessor: "value",
+      Cell: (props) => {
+        return `${props.row.original.value} ETH`;
+      },
+    },
+  ]
+
+  const tokenTransferERC20 = [
+    {
+      Header: "Txn Hash",
+      accessor: "hash",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.hash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Method",
+      accessor: "method",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "From",
+      accessor: "from",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDBox>
+              <TextSnippetIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+              {props.row.original.from ?? "-"}
+            </span>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "To",
+      accessor: "to",
+    },
+    {
+      Header: "Value",
+      accessor: "value",
+      Cell: (props) => {
+        return `${props.row.original.value} ETH`;
+      },
+    },
+  ]
+
+  const tokenTransferERC20Contract = [
+    {
+      Header: "Txn Hash",
+      accessor: "hash",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.hash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Method",
+      accessor: "method",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "From",
+      accessor: "from",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDBox>
+              <TextSnippetIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+              {props.row.original.from ?? "-"}
+            </span>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "To",
+      accessor: "to",
+    },
+    {
+      Header: "Value",
+      accessor: "value",
+      Cell: (props) => {
+        return `${props.row.original.value} ETH`;
+      },
+    },
+  ]
+
+  const nftTransfer = [
+    {
+      Header: "Transaction Info",
+      accessor: "hash",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.hash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Method",
+      accessor: "method",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "From",
+      accessor: "from",
+      Cell: (props) => {
+        return (
+          <MDBox
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            <MDBox>
+              <TextSnippetIcon sx={{ mt: 1 }} />
+            </MDBox>
+            <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+              {props.row.original.from ?? "-"}
+            </span>
+
+            <MDBox>
+              <ContentCopyIcon sx={{ mt: 1 }} />
+            </MDBox>
+
+          </MDBox>
+        );
+      },
+    },
+    {
+      Header: "To",
+      accessor: "to",
+    },
+    {
+      Header: "Type",
+      Cell: (props) => {
+        return `ERC 721`;
+      },
+    },
+    {
+      Header: "Item",
+      Cell: (props) => {
+        return props.row.original.tokenSymbol
+      },
+    },
+  ]
+
+  const events = [
+    {
+      Header: "Txn Hash",
+      accessor: "transactionHash",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.transactionHash ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Block",
+      accessor: "block",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Method",
+      accessor: "method",
+      Cell: (props) => {
+        return (
+          <span style={{ color: "#0d7ee2", fontSize: "14px" }}>
+            {props.row.original.blockNumber ?? "-"}
+          </span>
+        );
+      },
+    },
+    {
+      Header: <span style={{ color: "#0d7ee2", fontSize: "14px" }}>Age</span>,
+      accessor: "timeStamp",
+      Cell: (props) => {
+        return <>{getTimeDifference(props.row.original.timeStamp)}</>;
+      },
+    },
+    {
+      Header: "Logs",
+      accessor: "logs",
+      Cell: (props) => {
+        return <div>
+          {props.row.original.topics.map((i, idx) => {
+            return <div>{`[topic${idx}] ${i}  `}</div>
+          })}
+        </div>
+      },
+    },
+  ]
+
+  const showColumns = () => {
+    switch (selectedTable) {
+      case "transactions":
+        return transactionColumns;
+      case "internal-transaction":
+        return internalTransactions;
+      case "events":
+        return events
+      case "erc20":
+        return tokenTransferERC20
+      case "erc20Contract":
+        return tokenTransferERC20Contract
+      case "nft-transfer":
+        return nftTransfer;
+      default:
+        return transactionColumns;
     }
 
   }
-
-  console.log(jsonItems, 'jsonItems');
-
   return (
     <React.Fragment>
       <Navbar />
-      {!Object.keys(jsonItems).length > 0 && <Grid sx={{ backgroundColor: "#eaeaea" }}>
-        <Grid>
-          <MDTypography
-            variant="h3"
-            lineHeight={1}
-            sx={{ cursor: "pointer", py: 2, pl: 2 }}
-          >
-            Ethereum Blockchain Explorer
-          </MDTypography>
-        </Grid>
-        <Grid>
-          <MDBox width="35rem">
-            <MDInput
+        <Grid sx={{ backgroundColor: "#eaeaea" }}>
+          <Grid>
+            <MDTypography
+              variant="h3"
+              lineHeight={1}
               sx={{ cursor: "pointer", py: 2, pl: 2 }}
-              value={address}
-              onChange={({currentTarget}) => setAddress(currentTarget.value)}
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={fetchContract}
-                      edge="end"
-                    >
-                      <Search />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            {loading ? <Loader /> : null}
-          </MDBox>
+            >
+              Ethereum Blockchain Explorer
+            </MDTypography>
+          </Grid>
+          <Grid>
+            <MDBox width="35rem">
+              <MDInput
+                sx={{ cursor: "pointer", py: 2, pl: 2 }}
+                value={address}
+                onChange={({ currentTarget }) =>
+                  setAddress(currentTarget.value)
+                }
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={fetchContract}
+                        edge="end"
+                      >
+                        <Search />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {loading ? <Loader /> : null}
+            </MDBox>
+          </Grid>
         </Grid>
-      </Grid>}
       {true && (
         <>
           {" "}
@@ -345,53 +880,61 @@ function Dashboard() {
                 badgeContent="Transactions"
                 size="md"
                 container
+                color={selectedTable === "transaction" ? null : "light"}
                 sx={{ mr: 1, mt: 1 }}
+                onClick={() => setSelectedTable('transaction')}
               />
               <MDBadge
                 badgeContent="Internal Transactions"
-                color="light"
+                color={selectedTable === "internal-transaction" ? null : "light"}
+                onClick={() => setSelectedTable('internal-transaction')}
                 container
-                sx={{ mr: 1, mt: 1 }}
+                sx={{ mr: 1, mt: 1, cursor: "pointer" }}
               />
               <MDBadge
                 badgeContent="Token Transfer (ERC:20)"
-                color="light"
+                color={selectedTable === "erc20" ? null : "light"}
                 container
                 sx={{ mr: 1, mt: 1 }}
+                onClick={() => setSelectedTable('erc20')}
               />
               <MDBadge
                 badgeContent="NFT Transfer"
-                color="light"
+                color={selectedTable === "nft-transfer" ? null : "light"}
                 container
+                onClick={() => setSelectedTable('nft-transfer')}
                 sx={{ mr: 1, mt: 1 }}
               />
               <MDBadge
-                badgeContent="Contract"
-                color="light"
+                badgeContent="Token Transfer (ERC:20 Contract)"
+                color={selectedTable === "erc20Contract" ? null : "light"}
+                onClick={() => setSelectedTable('erc20Contract')}
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
               <MDBadge
                 badgeContent="Events"
-                color="light"
+                onClick={() => setSelectedTable('events')}
+                color={selectedTable === "events" ? null : "light"}
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
               <MDBadge
                 badgeContent="Analaytics"
-                color="light"
+                color={"light"}
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
               <MDBadge
                 badgeContent="Info"
-                color="light"
+                color={selectedTable === "info" ? null : "light"}
+                onClick={() => setSelectedTable('info')}
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
               <MDBadge
                 badgeContent="Comments"
-                color="light"
+                color={"light"}
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
@@ -399,10 +942,13 @@ function Dashboard() {
           </Grid>
           <MDBox mb={3}>
             <Card>
-              <MDBox p={3} lineHeight={1}>
+              {/* <MDBox p={3} lineHeight={1}>
                 <MDTypography variant="button" color="text">
                   <ArrowDownwardIcon /> Latest 25 drom a total of
-                  <span style={{ color: "#0d7ee2" }}>1,,013,060</span>{" "}
+                  <span style={{ color: "#0d7ee2" }}>
+                    {" "}
+                    {jsonItems.length}
+                  </span>{" "}
                   transcations
                 </MDTypography>
                 <MDBox>
@@ -411,8 +957,18 @@ function Dashboard() {
                     <span style={{ color: "#0d7ee2" }}>25 Pending Txns</span>)
                   </MDTypography>
                 </MDBox>
-              </MDBox>
-              <DataTable table={dataTableData} />
+              </MDBox> */}
+
+              {loading ? (
+                <Loader />
+              ) : selectedTable === 'info' ? <MDCard firstBlockHeader="OVERVIEW" firstBlockData="USDC is a fully collateralized US Dollar stablecoin developed by CENTRE, the open source project with Circle being the first of several forthcoming issuers.
+              ">
+              </MDCard> : (
+                <DataTable table={{ columns: showColumns(), rows: data[selectedTable] ?? [] }} />
+
+              )}
+              {/* 
+              <DataTable table={dataTableData} isLoading={false} /> */}
             </Card>
           </MDBox>
         </>
@@ -429,3 +985,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+// erc20 contract:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+// contract deployer: 0x95ba4cf87d6723ad9c0db21737d862be80e93911
