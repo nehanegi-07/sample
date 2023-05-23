@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -28,6 +28,11 @@ import Loader from "components/Loader";
 import { notifySuccess } from "components/Messages";
 import { notifyError } from "components/Messages";
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import { gasInEthConversion } from "utils/constants";
+import { txnFeeConversion } from "utils/constants";
+import { valueConversionForInternalTransaction } from "utils/constants";
+import TransactionVolumeChart from "components/Chart";
+import Analaytics from "./Analaytics";
 
 
 function getTimeDifference(timestamp) {
@@ -174,16 +179,17 @@ const cardData = [
 ];
 function Dashboard() {
   const [address, setAddress] = useState("");
-  // const [, setContractIDData] = useState([])
   const [data, setData] = useState({})
   const [selectedTable, setSelectedTable] = useState("transaction")
   const [loading, setLoading] = useState(false);
+  const [ethToUSD,setEthToUSD]=useState(null)
 
   const fetchContract = async () => {
     try {
       setLoading(true);
       const response = await contract({ hex_address: address });
       const jsonBCData = response.data;
+      console.log(jsonBCData,"jsonBCData")
       setData({
         transaction: jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_txn.json"],
         "internal-transaction": jsonBCData["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48_int_txn.json"],
@@ -318,7 +324,7 @@ function Dashboard() {
       Header: "Value",
       accessor: "value",
       Cell: (props) => {
-        return `${props.row.original.value} ETH`;
+        return `${gasInEthConversion(props.row.original.gasUsed,props.row.original.gasPrice)} ETH`;
       },
     },
     {
@@ -327,10 +333,21 @@ function Dashboard() {
       ),
       accessor: "transactionIndex",
       Cell: (props) => {
-        return props.row.original.gasPrice;
+        return `${txnFeeConversion(props.row.original.gasUsed,props.row.original.gasPrice,ethToUSD)}`;
       },
     },
   ];
+
+  useEffect(()=>{
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+  .then(response => response.json())
+  .then(data => {
+    setEthToUSD(data.ethereum.usd) 
+  })
+  .catch(error => {
+    console.log('Error fetching ETH to USD exchange rate:', error);
+  });
+  })
 
   const internalTransactions = [
     {
@@ -422,7 +439,7 @@ function Dashboard() {
       Header: "Value",
       accessor: "value",
       Cell: (props) => {
-        return `${props.row.original.value} ETH`;
+        return `${valueConversionForInternalTransaction(props.row.original.value)} ETH`;
       },
     },
   ]
@@ -493,8 +510,8 @@ function Dashboard() {
       Header: "Value",
       accessor: "value",
       Cell: (props) => {
-        return `${props.row.original.value} ETH`;
-      },
+        return `${valueConversionForInternalTransaction(props.row.original.value)} `;
+      }
     },
   ]
 
@@ -921,7 +938,9 @@ function Dashboard() {
               />
               <MDBadge
                 badgeContent="Analaytics"
-                color={"light"}
+                onClick={() => setSelectedTable('analaytics')}
+                color={selectedTable === "analaytics" ? null : "light"}
+              
                 container
                 sx={{ mr: 1, mt: 1 }}
               />
@@ -958,14 +977,18 @@ function Dashboard() {
                   </MDTypography>
                 </MDBox>
               </MDBox> */}
-
+  
               {loading ? (
                 <Loader />
               ) : selectedTable === 'info' ? <MDCard firstBlockHeader="OVERVIEW" firstBlockData="USDC is a fully collateralized US Dollar stablecoin developed by CENTRE, the open source project with Circle being the first of several forthcoming issuers.
               ">
               </MDCard> : (
+                selectedTable==="analaytics"? <div>
+                {/* <h1>Transaction Volume Over Time</h1> */}
+                <Analaytics/>
+                {/* <TransactionVolumeChart /> */}
+              </div>:
                 <DataTable table={{ columns: showColumns(), rows: data[selectedTable] ?? [] }} />
-
               )}
               {/* 
               <DataTable table={dataTableData} isLoading={false} /> */}
