@@ -5,6 +5,8 @@ import App from "./App";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { MaterialUIControllerProvider } from "./context";
 import { ToastContainer } from "react-toastify";
+import 'regenerator-runtime'
+
 
 const queryClient = new QueryClient();
 
